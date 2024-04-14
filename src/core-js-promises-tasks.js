@@ -136,7 +136,8 @@ function getAllResult(promises) {
 /**
  * Takes an array of promises and processes them sequentially, concatenating each resolved value into a single string.
  * The resolution order is determined by the order of the promises in the array, not by their resolution time.
- * Static methods of the Promise class are not to be used, necessitating a manual chaining approach to ensure sequential processing.
+ * Static methods of the Promise class are not to be used, necessitating a manual
+ * chaining approach to ensure sequential processing.
  *
  * @param {Array<Promise<number>>} promises
  * @return {Promise<string>}
@@ -152,11 +153,11 @@ function getAllResult(promises) {
  * [promise1, promise4, promise3, promise2] => Promise.resolved('10403020')
  */
 function queuPromises(promises) {
-  return promises.reduce((acc, curr) => {
-    return acc.then((result) =>
-      curr.then((value) => result + value.toString())
-    );
-  }, Promise.resolve(''));
+  let chain = Promise.resolve('');
+  promises.forEach((promise) => {
+    chain = chain.then((value) => promise.then((res) => value + res));
+  });
+  return chain;
 }
 
 module.exports = {
