@@ -120,7 +120,17 @@ function getAllOrNothing(promises) {
  * [Promise.resolve(1), Promise.reject(2), Promise.resolve(3)]  => Promise fulfilled with [1, null, 3]
  */
 function getAllResult(promises) {
-  // return Promise.all(promises).then((value) => console.log(value));
+  return Promise.allSettled(promises).then((value) => {
+    const resultArr = [];
+    value.forEach((promiseRes) => {
+      if (promiseRes.status === 'fulfilled') {
+        resultArr.push(promiseRes.value);
+      } else {
+        resultArr.push(null);
+      }
+    });
+    return resultArr;
+  });
 }
 
 /**
